@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kjøp av kinobilletter</title>
+</head>
+<body>
+<h1>Kjøp av kinobilletter</h1>
+
+<div>
+    <h2>Registrer ny billett</h2>
+    <form id="ticketForm">
+        <label for="movieName">Velg film:</label>
+        <select id="movieName" >
+            <option value="">Velg film</option>
+            <option value="film1">Film 1</option>
+            <option value="film2">Film 2</option>
+            <option value="film3">Film 3</option>
+        </select><br>
+
+        <label for="customerName">Navn:</label>
+        <input type="text" id="customerName" ><br>
+
+        <label for="email">E-post:</label>
+        <input type="email" id="email" ><br>
+
+        <label for="phone">Telefon:</label>
+        <input type="tel" id="phone" pattern="[0-9]{8}" ><br>
+
+        <label for="numberOfPeople">Antall personer:</label>
+        <input type="number" id="numberOfPeople" min="1" max="10" ><br>
+
+        <button type="submit">Kjøp billett</button>
+    </form>
+</div>
+
+<div>
+    <h2>Alle billetter</h2>
+    <ul id="ticketList"></ul>
+    <button id="deleteTickets">Slett alle billettene</button>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
