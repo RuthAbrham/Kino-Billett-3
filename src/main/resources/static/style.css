@@ -1,0 +1,22 @@
+/* Style the input element for the "Antall" label */
+#numberOfPeople {
+    margin-left: 10px; /* Adjust the value as needed */
+}
+#customerName{
+    margin-left: 15px; /* Adjust the value as needed*/
+}
+#email{
+    margin-left: 10px;
+}
+#phone{
+    margin-left: 5px;
+}
+input {
+    margin-bottom: 1px; /* Adjust the value as needed */
+}
+#movieName {
+    margin-bottom: 10px; /* Adjust the value as needed */
+}
+#kjøp billet{
+    margin-bottom: 10px;
+}

@@ -1,74 +1,95 @@
-// script.js
+function kjopBillett() {
+    //variabel for å sjekke om det er noe feil
+    const film = $("#film").val();
+    const antall = $("#antall").val();
+    const fornavn = $("#fornavn").val();
+    const etternavn = $("#etternavn").val();
+    const telefonnr = $("#telefonnr").val();
+    const epost = $("#epost").val();
 
-document.addEventListener('DOMContentLoaded', function() {
-    const ticketForm = document.getElementById('ticketForm');
-    const ticketList = document.getElementById('ticketList');
-    const deleteButton = document.getElementById('deleteTickets');
+    let error = 0;
+    //  sjekker om det er en tall
+    if (isNaN(Number(antall))) {
+        alert("Ikke et tall");
+        error = true;
+    } else if (Number(antall) < 1) {
+        alert("velg antall");
+        error = true;
+    }
+    //sjekker om det er en gyldig epost
+    if (!epost.includes("@")) {
+        alert("uglyding epost")
+        error = true;
+    }
 
-    const tickets = [];
 
-    ticketForm.addEventListener('submit', function(event) {
-        event.preventDefault();
+    //      objekt med alle inputene
+    const person = {
+        film: film,
+        antall: antall,
+        fornavn: fornavn,
+        etternavn: etternavn,
+        telefonnr: telefonnr,
+        epost: epost,
+    }       // oppretter en array med alle inputene som prukes til feil melding
 
-        const movieName = document.getElementById('movieName').value;
-        const customerName = document.getElementById('customerName').value;
-        const email = document.getElementById('email').value;
-        const phone = document.getElementById('phone').value;
-        const numberOfPeople = document.getElementById('numberOfPeople').value;
+    for (let i in person) {
+        if (person[i] === " ") {
+            document.getElementById(i + "feilmelding").innerHTML = "Må skrive noe inn i " + i;
+            error = true;
+        } else {
+            document.getElementById(i + "feilmelding").innerHTML = "";
 
-        // Validating inputs
-        if (movieName.trim() === '' || customerName.trim() === '' || email.trim() === '' || phone.trim() === '' || numberOfPeople.trim() === '') {
-            alert('Alle felt må fylles ut.');
-            return;
         }
 
-        // Assuming email validation here, you can customize it further
-        if (!isValidEmail(email)) {
-            alert('Vennligst skriv inn en gyldig e-postadresse.');
-            return;
-        }
-
-        // Assuming phone number validation here, you can customize it further
-        if (!isValidPhoneNumber(phone)) {
-            alert('Vennligst skriv inn et gyldig telefonnummer.');
-            return;
-        }
-
-        const ticket = {
-            movieName: movieName,
-            customerName: customerName,
-            email: email,
-            phone: phone,
-            numberOfPeople: numberOfPeople
-        };
-
-        tickets.push(ticket);
-        displayTickets();
-        ticketForm.reset();
-    });
-
-    deleteButton.addEventListener('click', function() {
-        tickets.length = 0;
-        displayTickets();
-    });
-
-    function displayTickets() {
-        ticketList.innerHTML = '';
-        tickets.forEach(function(ticket, index) {
-            const li = document.createElement('li');
-            li.textContent = `Billett ${index + 1}: Film: ${ticket.movieName}, Navn: ${ticket.customerName}, E-post: ${ticket.email}, Telefon: ${ticket.phone}, Antall personer: ${ticket.numberOfPeople}`;
-            ticketList.appendChild(li);
+    }          // hvis det ikke er noen feil så ligges objektene til i arrayet
+    if (!error) {
+        // sender objekter til serveren
+        $.post("/lagre", person, function () {
+            hentAlle();
         });
-    }
 
-    function isValidEmail(email) {
-        // Simple email validation, can be further enhanced
-        return /\S+@\S+\.\S+/.test(email);
-    }
+        $("#film").val("");
+        $("#antall").val("");
+        $("#fornavn").val("");
+        $("#etternavn").val("");
+        $("#telefonnr").val("");
+        $("#epost").val("");
 
-    function isValidPhoneNumber(phone) {
-        // Simple phone number validation, assuming 8 digits
-        return /^\d{8}$/.test(phone);
+
     }
-})
+}
+
+function hentAlle() {
+    $.get("/hent", function (data) {
+        visKjop(data);
+    });
+}
+
+
+//lager tabel
+function visKjop(data) {
+
+    let ut = "<table id='table'><tr>" + "<th>Film</th><th>Antall</th><th>Navn</th><th>Etternavn</th><th>Telefonnr</th><th>Epost</th>" +
+        "</tr>";
+
+    for (let i of data) {
+        ut += "<tr>"
+            + "<td>" + i.film + "</td><td>" + i.antall + "</td><td>"
+            + i.fornavn + "</td><td>" + i.etternavn + "</td><td>"
+            + i.telefonnr + "</td><td>" + i.epost + "</td>";
+        ut += "</tr>";
+    }
+    document.getElementById("boks").innerHTML = ut;
+
+}
+
+// sletter value
+function slett() {
+    $.get("/slett", function () {
+        hentAlle();
+    });
+
+}
+
 
