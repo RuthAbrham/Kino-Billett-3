@@ -70,14 +70,15 @@ function hentAlle() {
 //lager tabel
 function visKjop(data) {
 
-    let ut = "<table id='table'><tr>" + "<th>Film</th><th>Antall</th><th>Navn</th><th>Etternavn</th><th>Telefonnr</th><th>Epost</th>" +
+    let ut = "<table id='table'><tr> <th> Film </th> <th>Antall</th> <th> Navn</th> <th> Etternavn</th> <th> Telefonnr</th> <th> Epost</th> " +
         "</tr>";
 
     for (let i of data) {
         ut += "<tr>"
-            + "<td>" + i.film + "</td><td>" + i.antall + "</td><td>"
-            + i.fornavn + "</td><td>" + i.etternavn + "</td><td>"
-            + i.telefonnr + "</td><td>" + i.epost + "</td>";
+            + "<td>" + i.film + "</td><td>" + i.antall +"" + "</td><td>"
+            + i.fornavn + "</td><td>" + i.etternavn +""+ "</td><td>"
+            + i.telefonnr + "</td><td>" + i.epost +""+ "</td>" + "<td><button onclick='sletten(" + i.id + "   )'> slett </button>  </td>" ;
+            console.log(i.id);
         ut += "</tr>";
     }
     document.getElementById("boks").innerHTML = ut;
@@ -91,5 +92,23 @@ function slett() {
     });
 
 }
+function sletten(id) {
+    // Confirm with the user before deleting the ticket
+    const confirmed = confirm("Er du sikker på at du vil slette denne billetten?");
 
-
+    if (confirmed) {
+        // Use the ID of the ticket to send a DELETE request to the server
+        $.ajax({
+            url: `/slett/${id}`, // Modify the URL according to your server's API for deleting tickets
+            type: "DELETE",
+            success: function() {
+                // If the ticket is deleted successfully, refresh the list of tickets
+                hentAlle();
+            },
+            error: function() {
+                // Handle any error that may occur
+                alert("Noe gikk galt under sletting av billetten. Prøv på nytt senere.");
+            }
+        });
+    }
+}

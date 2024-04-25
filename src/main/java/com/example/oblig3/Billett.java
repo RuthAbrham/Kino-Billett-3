@@ -1,7 +1,9 @@
 package com.example.oblig3;
 
 public class Billett {
+    private int id;
     private String film;
+
     private String antall;
     private String fornavn;
     private String etternavn;
