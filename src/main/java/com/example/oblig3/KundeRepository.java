@@ -32,7 +32,11 @@ public class KundeRepository {
         String sql = "DELETE FROM Billett";
         db.update(sql);
     }
+    public void sletten(int bid){
+        String sql = "DELETE From Billett where id = ?"  ;
+        db.update(sql, bid);
 
+    }
 
 }
 
